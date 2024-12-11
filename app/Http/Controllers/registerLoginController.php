@@ -8,12 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class registerLoginController extends Controller
 {
-    public function showLogin(){
+    public function showLogin(){ 
+        if (Auth::check()) {
+            return redirect()->back(); // Redirect to the previous page if authenticated
+        }
         return view('auth.login');
     }
 
 
     public function showRegister(){ 
+        if (Auth::check()) {
+            return redirect()->back(); // Redirect to the previous page if authenticated
+        }
         return view('auth.register');
     }
     
@@ -43,15 +49,18 @@ class registerLoginController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-
+ 
         if(Auth::attempt($credentials)){
             return redirect()->route('home');
         }
+        flash()->error('Invalid email or password.');
+        return redirect()->back();
     }
 
     // code for logout
     public function logoutUser(){
         Auth::logout();
+        flash()->success('User Logout Successfully!');
         return redirect()->route('show.login');
     }
 }

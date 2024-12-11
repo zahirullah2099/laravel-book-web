@@ -5,10 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
-    
+    // dashboard 
+    public function dashboard(){
+        $books = Book::latest()->take(5)->get();
+
+        // $genre = Book::select('genre', DB::raw('count(*) as total'))
+        //             ->groupBy('genre')->get();
+
+                    return view('home', ['books' => $books]);
+                    // , 'genres' => $genre
+    }
+
+
+
+
     // Display a listing of the resource.
      
     public function index()

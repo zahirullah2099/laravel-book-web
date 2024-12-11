@@ -8,16 +8,14 @@ use App\Http\Middleware\ValidUser;
 use App\Http\Middleware\ValidUser2;
 use Illuminate\Support\Facades\Route;
  
-Route::get('/', function(){
-    return view('home');
-})->name('home');
+Route::get('/', [BookController::class, 'dashboard'])->name('home');
  
 
 // ROUTES FOR LOGIN AND REGISTER
 Route::controller(registerLoginController::class)->group(function(){
-    Route::get('/login', 'showLogin')->name('show.login')->middleware('guest');
+    Route::get('/login', 'showLogin')->name('show.login');
     Route::post('/login', 'loginUser')->name('loginUser')->middleware('guest');
-    Route::get('/register', 'showRegister')->name('show.register')->middleware('guest');
+    Route::get('/register', 'showRegister')->name('show.register'); 
     Route::post('/register', 'registerUser')->name('registerUser')->middleware('guest');
     Route::get('/logout', 'logoutUser')->name('logoutUser');
 });

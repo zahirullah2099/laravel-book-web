@@ -5,20 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
     // dashboard 
-    public function dashboard(){
-        $books = Book::latest()->take(5)->get();
-
-        // $genre = Book::select('genre', DB::raw('count(*) as total'))
-        //             ->groupBy('genre')->get();
-
-                    return view('home', ['books' => $books]);
-                    // , 'genres' => $genre
+    public function dashboard()
+    {
+        // Get the latest 5 books along with their genre
+        $books = Book::with('genre')->latest()->take(5)->get();
+    
+        // Get the genre count
+        $genres = Genre::withCount('books')->get();
+    
+        return view('home', ['books' => $books, 'genres' => $genres]);
     }
+    
 
 
 
@@ -27,6 +30,9 @@ class BookController extends Controller
      
     public function index()
     {
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $books = Book::with('genre')->paginate(6);
         $genres = Genre::all(); // Fetch all genres
         return view('books', ['books' => $books, 'genres' => $genres]);
@@ -37,6 +43,10 @@ class BookController extends Controller
      
     public function bookSearch(Request $request)
     {
+        if(Auth::guest()){
+            return redirect()->back();
+        }
+
         $query = Book::query();
         if ($request->has('search')) {
             $query->where('title', 'like', '%' . $request->search . '%')
@@ -53,6 +63,10 @@ class BookController extends Controller
       
     public function store(Request $request)
     {
+
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $request->validate([
             'title' => 'required',
             'author' => 'required',
@@ -86,6 +100,9 @@ class BookController extends Controller
      */
     public function bookDetails(string $id)
     { 
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         // Eager load the related genre (or any other relationships)
         $bookDetail = Book::with('genre')->find($id);
         return view('bookDetails', ['bookDetail' => $bookDetail]);
@@ -97,6 +114,10 @@ class BookController extends Controller
     
     public function edit(string $id)
     {
+
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $book = Book::with('genre')->find($id);
         return view('bookEdit', ['book' => $book]);
     }
@@ -106,6 +127,9 @@ class BookController extends Controller
      
     public function update(Request $request, string $id)
     {
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $validatedData = $request->validate([
             'title' => 'required',
             'author' => 'required',
@@ -140,6 +164,9 @@ class BookController extends Controller
      
     public function bookDelete(string $id)
     {
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $bookDelete = Book::where('id', $id)->delete();
     
         if ($bookDelete) {

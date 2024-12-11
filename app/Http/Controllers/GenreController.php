@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GenreController extends Controller
 {
@@ -12,6 +13,9 @@ class GenreController extends Controller
      */
     public function index()
     {
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $genres = Genre::paginate(6);
         return view('genre', ['genres' => $genres]);
     }
@@ -19,6 +23,9 @@ class GenreController extends Controller
     //   Display the record by search. 
     public function search(Request $request)
     {  
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $query = Genre::query();
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -32,6 +39,9 @@ class GenreController extends Controller
 // adding the genre
     public function addGenre(Request $request)
     {
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $request->validate([
             'name' => 'required|unique:genres,name'
         ]); 
@@ -50,12 +60,18 @@ class GenreController extends Controller
 
     // code for editing the genre
     public function edit($id){
+        if(Auth::guest()){
+            return redirect()->back();
+        }
         $genre = Genre::find($id);
         return view('genreEdit', ['genre' => $genre]);
     }
 
     // code for updating the genre
     public function update(Request $request, string $id){
+        if(Auth::guest()){
+            return redirect()->back();
+        }
             $request->validate([
                 'name' => 'required|unique:genres,name'
             ]);
@@ -71,6 +87,9 @@ class GenreController extends Controller
         
         // code for deletion the genre
         public function genreDelete($id){
+            if(Auth::guest()){
+                return redirect()->back();
+            }
             $genre = Genre::where('id',$id)->delete();
             if($genre){
             flash()->success('genre deleted successfully.');

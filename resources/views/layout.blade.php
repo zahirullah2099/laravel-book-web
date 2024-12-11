@@ -75,7 +75,7 @@
         </nav>
     </div>
 
-    
+
     @yield('content');
 
     <!-- Bootstrap JS and Popper.js (optional) -->
@@ -88,3 +88,5 @@
 
 
 </html>
+
+{{-- bookView/2 --}}

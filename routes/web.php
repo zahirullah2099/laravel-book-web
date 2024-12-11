@@ -50,4 +50,6 @@ Route::get('/profile', [UserController::class, 'userProfile'])->name('user.profi
 Route::post('/updateProfile', [UserController::class, 'updateProfile'])->name('update.profile');
 
 
-  
+Route::fallback(function () { 
+    return view('errorsPage');  
+});

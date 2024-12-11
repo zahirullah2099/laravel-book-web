@@ -61,6 +61,6 @@ class registerLoginController extends Controller
     public function logoutUser(){
         Auth::logout();
         flash()->success('User Logout Successfully!');
-        return redirect()->route('show.login');
+        return redirect()->route('home');
     }
 }

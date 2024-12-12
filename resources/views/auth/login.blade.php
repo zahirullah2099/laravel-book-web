@@ -23,7 +23,9 @@
                 <!-- resources/views/register.blade.php -->
                 <form method="POST" action="{{ route('loginUser') }}">
                     @csrf
+                    <label for="email">Email</label>
                     <input class="form-control mb-2" type="email" name="email" placeholder="Email" required>
+                    <label for="password">Password</label>
                     <input class="form-control mb-2" type="password" name="password" placeholder="Password" required>
                     <button class="btn btn-primary" type="submit">Login</button>
                 </form>
